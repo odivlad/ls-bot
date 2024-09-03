@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "ls-bot"
+version = "0.1.0"
+description = "Telegram bot code for Summer Garden bld. 2 apartments."
+authors = ["Vladislav Odintsov <odivlad@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+python-telegram-bot = "13.12"
+
+[tool.poetry.scripts]
+ls-bot = "ls_bot.bot:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

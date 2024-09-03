@@ -1,0 +1,10 @@
+services:
+  ls-bot:
+    image: ls-bot
+    build:
+      context: .
+    environment:
+      TG_TOKEN: ${TG_TOKEN}
+    volumes:
+      - "./ls-messages.txt:/app/ls-messages.txt:rw"
+      - "./app.log:/app/app.log:rw"
