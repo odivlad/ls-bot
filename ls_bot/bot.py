@@ -24,19 +24,26 @@ WELCOME_MESSAGE = f"""Добро пожаловать!
 CONFIRM_TEXT = "Спасибо! Мы сохранили вашу информацию."
 ERROR_TEXT = f"Ошибка. Напишите сообщение в формате:\n\n{msg_format}"
 
+GROUP_ID = None
+
 
 def log(msg):
 
     with open(LOG_FILE, "+a") as f:
         f.write(f"{datetime.datetime.now()}: {msg}\n")
 
-def log_message(message):
+
+def log_message(context: CallbackContext, message):
     if not message.text:
         raise Exception("No text provided!")
 
     msg = f"{datetime.datetime.now()}: FROM {message.from_user.full_name}: {message.text}\n"
     with open(USER_LOG_FILE, "+a") as f:
         f.write(msg)
+
+    if GROUP_ID is not None:
+        context.bot.forward_message(GROUP_ID, message.chat.id, message.message_id)
+        log(f"Message forwarded to GROUP {GROUP_ID}")
 
 
 def start(update: Update, context: CallbackContext):
@@ -52,7 +59,7 @@ def main_handle(update: Update, context: CallbackContext) -> None:
 
     log(f"{update.message.from_user.full_name} wrote {update.message.text}")
     try:
-        log_message(update.message)
+        log_message(context, update.message)
     except Exception as e:
         log(e)
         context.bot.send_message(update.message.chat_id, ERROR_TEXT)
@@ -63,6 +70,12 @@ def main_handle(update: Update, context: CallbackContext) -> None:
 
 def main() -> None:
     updater = Updater(os.getenv("TG_TOKEN"))
+
+    global GROUP_ID
+    try:
+        GROUP_ID = os.getenv("TG_GROUP_ID")
+    except Exception as e:
+        log(e)
 
     # Get the dispatcher to register handlers
     # Then, we register each handler and the conditions the update must meet to trigger it
@@ -83,5 +96,5 @@ def main() -> None:
     updater.idle()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

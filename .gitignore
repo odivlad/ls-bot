@@ -1,4 +1,5 @@
 *.swp
 poetry.lock
 __pycache__
-ls-k2-messages.txt
+ls-messages.txt
+app.log
