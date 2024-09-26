@@ -6,6 +6,7 @@ services:
     environment:
       TG_TOKEN: ${TG_TOKEN}
       TG_GROUP_ID: ${TG_GROUP_ID}
+      TG_ADMIN_ID: ${TG_ADMIN_ID}
     volumes:
       - "./ls-messages.txt:/app/ls-messages.txt:rw"
       - "./app.log:/app/app.log:rw"

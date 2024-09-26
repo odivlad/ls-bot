@@ -25,6 +25,7 @@ CONFIRM_TEXT = "Спасибо! Мы сохранили вашу информа�
 ERROR_TEXT = f"Ошибка. Напишите сообщение в формате:\n\n{msg_format}"
 
 GROUP_ID = None
+ADMIN_ID = None
 
 
 def log(msg):
@@ -52,6 +53,15 @@ def start(update: Update, context: CallbackContext):
     update.message.reply_text(WELCOME_MESSAGE)
 
 
+def report(update: Update, context: CallbackContext):
+    if ADMIN_ID is not None:
+        with open(USER_LOG_FILE, "r") as f:
+            text = f.read()
+        context.bot.send_message(ADMIN_ID, text)
+    else:
+        log("Got report command, but ADMIN_ID is not set.")
+
+
 def main_handle(update: Update, context: CallbackContext) -> None:
     """
     This function would be added to the dispatcher as a handler for messages coming from the Bot API
@@ -77,11 +87,18 @@ def main() -> None:
     except Exception as e:
         log(e)
 
+    global ADMIN_ID
+    try:
+        ADMIN_ID = os.getenv("TG_ADMIN_ID")
+    except Exception as e:
+        log(e)
+
     # Get the dispatcher to register handlers
     # Then, we register each handler and the conditions the update must meet to trigger it
     dispatcher = updater.dispatcher
 
     dispatcher.add_handler(CommandHandler("start", start))
+    dispatcher.add_handler(CommandHandler("report", report))
 
     # Register commands
     # Echo any message that is not a command
