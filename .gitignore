@@ -1,4 +1,5 @@
 *.swp
+.env
 poetry.lock
 __pycache__
 ls-messages.txt
