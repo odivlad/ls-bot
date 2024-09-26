@@ -38,7 +38,10 @@ def log_message(context: CallbackContext, message):
     if not message.text:
         raise Exception("No text provided!")
 
-    msg = f"{datetime.datetime.now()}: FROM {message.from_user.full_name}: {message.text}\n"
+    msg = (
+        f"{datetime.datetime.now()}: FROM {message.from_user.full_name} "
+        "(ID={message.from_user.id}): {message.text}\n"
+    )
     with open(USER_LOG_FILE, "+a") as f:
         f.write(msg)
 
@@ -49,11 +52,12 @@ def log_message(context: CallbackContext, message):
 
 def start(update: Update, context: CallbackContext):
 
-    log(f"{update.message.from_user.full_name} called /start")
+    log(f"USERID={update.message.from_user.id} {update.message.from_user.full_name} called /start")
     update.message.reply_text(WELCOME_MESSAGE)
 
 
 def report(update: Update, context: CallbackContext):
+    log(f"USERID={update.message.from_user.id} {update.message.from_user.full_name} called /report")
     if ADMIN_ID is not None:
         with open(USER_LOG_FILE, "r") as f:
             text = f.read()
@@ -67,7 +71,10 @@ def main_handle(update: Update, context: CallbackContext) -> None:
     This function would be added to the dispatcher as a handler for messages coming from the Bot API
     """
 
-    log(f"{update.message.from_user.full_name} wrote {update.message.text}")
+    log(
+        f"USERID={update.message.from_user.id} {update.message.from_user.full_name} wrote "
+        "{update.message.text}"
+    )
     try:
         log_message(context, update.message)
     except Exception as e:
