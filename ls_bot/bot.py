@@ -84,12 +84,14 @@ def main() -> None:
     global GROUP_ID
     try:
         GROUP_ID = os.getenv("TG_GROUP_ID")
+        log(f"Initialized GROUP_ID: {GROUP_ID}")
     except Exception as e:
         log(e)
 
     global ADMIN_ID
     try:
         ADMIN_ID = os.getenv("TG_ADMIN_ID")
+        log(f"Initialized ADMIN_ID: {ADMIN_ID}")
     except Exception as e:
         log(e)
 
